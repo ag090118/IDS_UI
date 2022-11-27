@@ -34,19 +34,19 @@ export default function IdsPage() {
   const itemData=[
     {
       img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_test_conf_mat.png",
-      title:"name 1"
+      title:"Testing Confusion Matrix"
     },
     {
       img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_test_clf_rep.png",
-      title:"name 2"
+      title:"Testing Classification Report"
     },
     {
       img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_training_conf_mat.png",
-      title:"name 3"
+      title:"Training Confusion Matrix"
     },
     {
       img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_training_clf_rep.png",
-      title:"name 4"
+      title:"Training Classification Report"
     },
   ];
 return (
@@ -63,7 +63,7 @@ return (
         </div>
         <Split
           direction='vertical'
-          sizes={[50, 50]}
+          sizes={[70, 30]}
           style={{width:"100%",height:"100%",margin:"auto"}}
         >
           <div className="topright">
@@ -85,9 +85,51 @@ return (
           ))}
     </ImageList>
           </div>
+
           <div className="bottomright">
-          <CircularProgressWithLabel value={80} />;
-          <CircularProgressWithLabel value={80} />;
+
+          <Box component="span" sx={{ display: 'block' }}>
+          <Box
+              component="div"
+              sx={{
+                display: 'inline',
+                p: 1,
+                m: 1,
+                bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
+                color: (theme) =>
+                  theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+                borderRadius: 2,
+                fontSize: '1rem',
+                fontWeight: '900',
+              }}
+          >Training Accuracy   : </Box>
+          <Box component="div" sx={{ display: 'inline',verticalAlign: '-50%' }}><CircularProgressWithLabel value={80} /></Box>
+          </Box>
+
+          <Box component="span" sx={{ display: 'block' }}>
+          <Box
+              component="div"
+              sx={{
+                display: 'inline',
+                p: 1,
+                m: 1,
+                bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
+                color: (theme) =>
+                  theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+                borderRadius: 2,
+                fontSize: '1rem',
+                fontWeight: '900',
+              }}
+          >Testing Accuracy   : </Box>
+          <Box component="div" sx={{ display: 'inline',verticalAlign: '-50%' }}><CircularProgressWithLabel value={80} /></Box>
+          </Box>
+          
           </div>
         </Split>
 </Split>
