@@ -48,7 +48,7 @@ export default function SignIn() {
         
     setCookie('userid', data.result._id, { path: '/' , expire: new Date(new Date().getTime()+ 258920000)});
     setCookie('username',data.result.username, { path: '/' , expire: new Date(new Date().getTime()+ 25892000000)});
-    setCookie('token',data.token, { path: '/' , expire: new Date(new Date().getTime()+ 25892000000)});
+    setCookie('jwtoken',data.token, { path: '/' , expire: new Date(new Date().getTime()+ 25892000000)});
     console.log(data);
     navigate("/ids");
     console.log(user);

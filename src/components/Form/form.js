@@ -67,12 +67,12 @@ export default function Form() {
     event.preventDefault();
     var str = one+" "+two+" "+three+" "+four+" "+five+" "+six+" "+seven;
     str=str.trim();
-    console.log(str)
+    console.log(cookies.jwtoken)
     const res=await fetch('/xyz', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization" : cookies.token
+        "Authorization" : cookies.jwtoken
       },
       body: JSON.stringify({
         runstr : str
@@ -102,7 +102,7 @@ export default function Form() {
           </Typography>
           <Box
             component="form"
-            onClick={handleSubmit}
+            onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
