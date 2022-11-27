@@ -24,6 +24,10 @@
     cursor: row-resize;
 }
 .topright{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     overflow-x: auto;
     overflow-y: auto;
 }

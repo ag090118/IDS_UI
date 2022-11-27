@@ -1,3 +1,4 @@
+import {React,useState,useEffect} from 'react';
 import Split from 'react-split'
 import Form from './form'
 import CircularProgress from '@mui/material/CircularProgress';
@@ -8,6 +9,35 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 export default function IdsPage() {
+  const [isLoading , setIsLoading] = useState(" ");
+  const [test, setTest] = useState(0);
+  const [training, setTraining] = useState(0);
+  const [img1, setImg1] = useState("")
+  const [img2, setImg2] = useState("")
+  const [img3, setImg3] = useState("")
+  const [img4, setImg4] = useState("")
+
+  function handleLoading(temp1) {
+    setIsLoading(temp1);
+  }
+  function handleTest(temp2) {
+    setTest(temp2);
+  }
+  function handleTraining(temp3) {
+    setTraining(temp3);
+  }
+  function handleImg1(temp4) {
+    setImg1(temp4);
+  }
+  function handleImg2(temp5) {
+    setImg2(temp5);
+  }
+  function handleImg3(temp6) {
+    setImg3(temp6);
+  }
+  function handleImg4(temp7) {
+    setImg4(temp7);
+  }
   function CircularProgressWithLabel(props) {
     return (
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -33,19 +63,19 @@ export default function IdsPage() {
   }
   const itemData=[
     {
-      img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_test_conf_mat.png",
+      img:img1,
       title:"Testing Confusion Matrix"
     },
     {
-      img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_test_clf_rep.png",
+      img:img2,
       title:"Testing Classification Report"
     },
     {
-      img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_training_conf_mat.png",
+      img:img3,
       title:"Training Confusion Matrix"
     },
     {
-      img:"http://localhost:3001/63836ab04f062ca5eacf4b19-1669559619532_training_clf_rep.png",
+      img:img4,
       title:"Training Classification Report"
     },
   ];
@@ -53,13 +83,13 @@ return (
 <div className="App">
 <Split
         className='flex'
-        sizes={[50, 50]}
+        sizes= {isLoading === " " ? [90, 10] : [50, 50]}
         style={{height:"100%",width:"100%",display:"flex",margin:"auto"}}
         minSize={500}
       >
         <div style={{height:"100%",width:"100%",overflow:"auto"}}>
           
-          <Form/>
+          <Form handleLoading={handleLoading} handleTest={handleTest} handleTraining={handleTraining} handleImg1={handleImg1} handleImg2={handleImg2} handleImg3={handleImg3} handleImg4={handleImg4}/>
         </div>
         <Split
           direction='vertical'
@@ -67,6 +97,10 @@ return (
           style={{width:"100%",height:"100%",margin:"auto"}}
         >
           <div className="topright">
+            { 
+            isLoading === " " ? 
+            null : 
+            isLoading === true ? <CircularProgress disableShrink /> : 
           <ImageList>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
@@ -84,52 +118,58 @@ return (
             </ImageListItem>
           ))}
     </ImageList>
+}
           </div>
 
           <div className="bottomright">
+          { 
+            isLoading === " " ? 
+            null : 
+            isLoading === true ? <CircularProgress disableShrink /> : 
+            <div>
+                <Box component="span" sx={{ display: 'block' }}>
+                <Box
+                    component="div"
+                    sx={{
+                      display: 'inline',
+                      p: 1,
+                      m: 1,
+                      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
+                      color: (theme) =>
+                        theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+                      border: '1px solid',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+                      borderRadius: 2,
+                      fontSize: '1rem',
+                      fontWeight: '900',
+                    }}
+                >Training Accuracy   : </Box>
+                <Box component="div" sx={{ display: 'inline',verticalAlign: '-50%' }}><CircularProgressWithLabel value={training} /></Box>
+                </Box>
 
-          <Box component="span" sx={{ display: 'block' }}>
-          <Box
-              component="div"
-              sx={{
-                display: 'inline',
-                p: 1,
-                m: 1,
-                bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
-                color: (theme) =>
-                  theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-                borderRadius: 2,
-                fontSize: '1rem',
-                fontWeight: '900',
-              }}
-          >Training Accuracy   : </Box>
-          <Box component="div" sx={{ display: 'inline',verticalAlign: '-50%' }}><CircularProgressWithLabel value={80} /></Box>
-          </Box>
-
-          <Box component="span" sx={{ display: 'block' }}>
-          <Box
-              component="div"
-              sx={{
-                display: 'inline',
-                p: 1,
-                m: 1,
-                bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
-                color: (theme) =>
-                  theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-                borderRadius: 2,
-                fontSize: '1rem',
-                fontWeight: '900',
-              }}
-          >Testing Accuracy   : </Box>
-          <Box component="div" sx={{ display: 'inline',verticalAlign: '-50%' }}><CircularProgressWithLabel value={80} /></Box>
-          </Box>
-          
+                <Box component="span" sx={{ display: 'block' }}>
+                <Box
+                    component="div"
+                    sx={{
+                      display: 'inline',
+                      p: 1,
+                      m: 1,
+                      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
+                      color: (theme) =>
+                        theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+                      border: '1px solid',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+                      borderRadius: 2,
+                      fontSize: '1rem',
+                      fontWeight: '900',
+                    }}
+                >Testing Accuracy   : </Box>
+                <Box component="div" sx={{ display: 'inline',verticalAlign: '-50%' }}><CircularProgressWithLabel value={test} /></Box>
+                </Box>
+          </div>
+}
           </div>
         </Split>
 </Split>

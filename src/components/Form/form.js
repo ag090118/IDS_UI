@@ -22,8 +22,8 @@ import { useCookies } from 'react-cookie';
 
 const theme = createTheme();
 
-export default function Form() {
-
+export default function Form(props) {
+  const {handleLoading,handleTest,handleTraining,handleImg1,handleImg2,handleImg3,handleImg4} = props;
   const [cookies, setCookie] = useCookies({});
 
   const [one , setOne] = React.useState([]);
@@ -33,6 +33,7 @@ export default function Form() {
   const [five , setFive] = React.useState([]);
   const [six , setSix] = React.useState([]);
   const [seven , setSeven] = React.useState([]);
+  const [solver , setSolver] = React.useState("none");
 
   const handleChange1 = (event) => {
     setOne(event.target.value)
@@ -44,6 +45,7 @@ export default function Form() {
 
   const handleChange3 = (event) => {
     setThree(event.target.value);
+    setSolver(event.target.value);
   };
 
   const handleChange4 = (event) => {
@@ -62,9 +64,9 @@ export default function Form() {
     setSeven(event.target.value);
   };
 
-
   const handleSubmit = async(event) => {
     event.preventDefault();
+    handleLoading(true);
     var str = one+" "+two+" "+three+" "+four+" "+five+" "+six+" "+seven;
     str=str.trim();
     console.log(cookies.jwtoken)
@@ -80,6 +82,15 @@ export default function Form() {
     });
     const data = await res.json();
     console.log(data);
+    handleImg1(data.fileTestClfRep)
+    handleImg2(data.fileTestConfMat)
+    handleImg3(data.fileTrainClfRep)
+    handleImg4(data.fileTrainConfMat)
+    var str = data.testAcc;
+    str = str.substring(0, str.length - 2);
+    handleTest(parseFloat(data.testAcc))
+    handleTraining(parseFloat(data.trainingAcc))
+    handleLoading(false);
   };
 
   return (
@@ -150,7 +161,6 @@ export default function Form() {
                 label="Solver"
                 onChange={handleChange3}
               >
-                <MenuItem value={"newton-cg"}>newton-cg</MenuItem>
                 <MenuItem value={"lbfgs"}>lbfgs</MenuItem>
                 <MenuItem value={"liblinear"}>liblinear</MenuItem>
                 <MenuItem value={"sag"}>sag</MenuItem>
@@ -158,21 +168,70 @@ export default function Form() {
               </Select>
               <FormHelperText>With label + helper text</FormHelperText>
           </FormControl>
-                 <FormControl sx={{ mt: 3 }} required fullWidth>
-              <InputLabel id="demo-simple-select-helper-label">Penalty Type</InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                id="penaltyType"
-                value={four}
-                label="penanltyType"
-                onChange={handleChange4}
-              >
-                <MenuItem value={"l2"}>l2</MenuItem>
-                <MenuItem value={"elasticnet"}>elasticnet</MenuItem>
-                <MenuItem value={"none"}>none</MenuItem>
-              </Select>
-              <FormHelperText>With label + helper text</FormHelperText>
-          </FormControl>
+          { solver === "none" ? null :
+                   solver === "lbfgs" ? 
+                   <FormControl sx={{ mt: 3 }} required fullWidth>
+                  <InputLabel id="demo-simple-select-helper-label">Penalty Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="penaltyType"
+                    value={four}
+                    label="penanltyType"
+                    onChange={handleChange4}
+                  >
+                    <MenuItem value={"l2"}>l2</MenuItem>
+                    <MenuItem value={"none"}>none</MenuItem>
+                  </Select>
+                  <FormHelperText>With label + helper text</FormHelperText>
+              </FormControl>
+              :
+              solver === "liblinear" ? 
+              <FormControl sx={{ mt: 3 }} required fullWidth>
+                  <InputLabel id="demo-simple-select-helper-label">Penalty Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="penaltyType"
+                    value={four}
+                    label="penanltyType"
+                    onChange={handleChange4}
+                  >
+                    <MenuItem value={"l1"}>l1</MenuItem>
+                    <MenuItem value={"l2"}>l2</MenuItem>
+                  </Select>
+                  <FormHelperText>With label + helper text</FormHelperText>
+              </FormControl> :
+               solver === "sag" ? 
+               <FormControl sx={{ mt: 3 }} required fullWidth>
+               <InputLabel id="demo-simple-select-helper-label">Penalty Type</InputLabel>
+               <Select
+                 labelId="demo-simple-select-helper-label"
+                 id="penaltyType"
+                 value={four}
+                 label="penanltyType"
+                 onChange={handleChange4}
+               >
+                 <MenuItem value={"l2"}>l2</MenuItem>
+                 <MenuItem value={"none"}>none</MenuItem>
+               </Select>
+               <FormHelperText>With label + helper text</FormHelperText>
+           </FormControl>
+              :
+                    <FormControl sx={{ mt: 3 }} required fullWidth>
+                  <InputLabel id="demo-simple-select-helper-label">Penalty Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="penaltyType"
+                    value={four}
+                    label="penanltyType"
+                    onChange={handleChange4}
+                  >
+                    <MenuItem value={"l1"}>l1</MenuItem>
+                    <MenuItem value={"l2"}>l2</MenuItem>
+                    <MenuItem value={"none"}>none</MenuItem>
+                  </Select>
+                  <FormHelperText>With label + helper text</FormHelperText>
+              </FormControl>
+          }
                 <TextField
                   margin="normal"
                   required
@@ -250,7 +309,7 @@ export default function Form() {
                 label="Splitting Criterion"
                 onChange={handleChange3}
               >
-                <MenuItem value={"gini-index"}>Gini-Index</MenuItem>
+                <MenuItem value={"gini"}>Gini</MenuItem>
                 <MenuItem value={"entropy"}>Entropy</MenuItem>
               </Select>
           </FormControl>
@@ -301,7 +360,6 @@ export default function Form() {
                 onChange={handleChange3}
               >
                 <MenuItem value={"bnb"}>Bernoulli NB</MenuItem>
-                <MenuItem value={"mnb"}>Multinomial NB</MenuItem>
                 <MenuItem value={"gnb"}>Gaussian NB</MenuItem>
               </Select>
               <FormHelperText>With label + helper text</FormHelperText>
@@ -347,7 +405,6 @@ export default function Form() {
                 label="Activation"
                 onChange={handleChange3}
               >
-                <MenuItem value={"identity"}>Identity</MenuItem>
                 <MenuItem value={"logistic"}>Logistic</MenuItem>
                 <MenuItem value={"tanh"}>Tanh</MenuItem>
                 <MenuItem value={"relu"}>Relu</MenuItem>
@@ -364,7 +421,6 @@ export default function Form() {
                 onChange={handleChange4}
               >
                 <MenuItem value={"lbfgs"}>lbfgs</MenuItem>
-                <MenuItem value={"sgd"}>sgd</MenuItem>
                 <MenuItem value={"adam"}>adam</MenuItem>
               </Select>
               <FormHelperText>With label + helper text</FormHelperText>
