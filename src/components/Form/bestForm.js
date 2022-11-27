@@ -22,76 +22,12 @@ import { FormControlLabel } from "@material-ui/core";
 
 const theme = createTheme();
 
-export default function Form(props) {
-  const {handleLoading,handleTest,handleTraining,handleImg1,handleImg2,handleImg3,handleImg4} = props;
+export default function BestForm(props) {
+  const {isLoading, arrstr} = props;
   const [cookies, setCookie] = useCookies({});
 
-  const [one , setOne] = React.useState([]);
-  const [two , setTwo] = React.useState([]);
-  const [three , setThree] = React.useState([]);
-  const [four , setFour] = React.useState([]);
-  const [five , setFive] = React.useState([]);
-  const [six , setSix] = React.useState([]);
-  const [seven , setSeven] = React.useState([]);
+  
   const [solver , setSolver] = React.useState("none");
-
-  const handleChange1 = (event) => {
-    setOne(event.target.value)
-  };
-
-  const handleChange2 = (event) => {
-    setTwo(event.target.value)
-  };
-
-  const handleChange3 = (event) => {
-    setThree(event.target.value);
-    setSolver(event.target.value);
-  };
-
-  const handleChange4 = (event) => {
-    setFour(event.target.value);
-  };
-
-  const handleChange5 = (event) => {
-    setFive(event.target.value);
-  };
-
-  const handleChange6 = (event) => {
-    setSix(event.target.value);
-  };
-
-  const handleChange7 = (event) => {
-    setSeven(event.target.value);
-  };
-
-  const handleSubmit = async(event) => {
-    event.preventDefault();
-    handleLoading(true);
-    var str = one+" "+two+" "+three+" "+four+" "+five+" "+six+" "+seven;
-    str=str.trim();
-    console.log(cookies.jwtoken)
-    const res=await fetch('/xyz', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : cookies.jwtoken
-      },
-      body: JSON.stringify({
-        runstr : str
-      })
-    });
-    const data = await res.json();
-    console.log(data);
-    handleImg1(data.fileTestClfRep)
-    handleImg2(data.fileTestConfMat)
-    handleImg3(data.fileTrainClfRep)
-    handleImg4(data.fileTrainConfMat)
-    var str = data.testAcc;
-    str = str.substring(0, str.length - 2);
-    handleTest(parseFloat(data.testAcc))
-    handleTraining(parseFloat(data.trainingAcc))
-    handleLoading(false);
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -113,7 +49,6 @@ export default function Form(props) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -123,9 +58,9 @@ export default function Form(props) {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={one}
+                value={arrstr[0]}
                 label="Classification"
-                onChange={handleChange1}
+                disabled
               >
                 <MenuItem value={"bnr"}>Binary</MenuItem>
                 <MenuItem value={"mul"}>Multiclass</MenuItem>
@@ -137,9 +72,9 @@ export default function Form(props) {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={two}
+                value={arrstr[1]}
                 label="Algorithms"
-                onChange={handleChange2}
+                disabled
               >
                 <MenuItem value={"lgr"}>Logistic Regression</MenuItem>
                 <MenuItem value={"rfc"}>Random Forest</MenuItem>
@@ -150,16 +85,16 @@ export default function Form(props) {
               </Select>
               <FormHelperText>With label + helper text</FormHelperText>
           </FormControl>
-          {  two === "lgr" &&  
+          {  arrstr[1] === "lgr" &&  
               <div>
                 <FormControl sx={{ mt: 3 }} required fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Solver</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="solver"
-                value={three}
+                value={arrstr[2]}
                 label="Solver"
-                onChange={handleChange3}
+                disabled
               >
                 <MenuItem value={"lbfgs"}>lbfgs</MenuItem>
                 <MenuItem value={"liblinear"}>liblinear</MenuItem>
@@ -175,9 +110,8 @@ export default function Form(props) {
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="penaltyType"
-                    value={four}
+                    value={arrstr[3]}
                     label="penanltyType"
-                    onChange={handleChange4}
                   >
                     <MenuItem value={"l2"}>l2</MenuItem>
                     <MenuItem value={"none"}>none</MenuItem>
@@ -191,9 +125,8 @@ export default function Form(props) {
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="penaltyType"
-                    value={four}
+                    value={arrstr[3]}
                     label="penanltyType"
-                    onChange={handleChange4}
                   >
                     <MenuItem value={"l1"}>l1</MenuItem>
                     <MenuItem value={"l2"}>l2</MenuItem>
@@ -206,9 +139,8 @@ export default function Form(props) {
                <Select
                  labelId="demo-simple-select-helper-label"
                  id="penaltyType"
-                 value={four}
+                 value={arrstr[3]}
                  label="penanltyType"
-                 onChange={handleChange4}
                >
                  <MenuItem value={"l2"}>l2</MenuItem>
                  <MenuItem value={"none"}>none</MenuItem>
@@ -221,9 +153,8 @@ export default function Form(props) {
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="penaltyType"
-                    value={four}
+                    value={arrstr[3]}
                     label="penanltyType"
-                    onChange={handleChange4}
                   >
                     <MenuItem value={"l1"}>l1</MenuItem>
                     <MenuItem value={"l2"}>l2</MenuItem>
@@ -240,12 +171,12 @@ export default function Form(props) {
                   label="Number of Iterations"
                   type="noi"
                   id="noi"
-                  onChange={handleChange5}
-                  value={five}
+                  value={arrstr[4]}
+                  disabled
                 />
                 </div>
           }
-          {  two === "rfc" &&  
+          {  arrstr[1] === "rfc" &&  
               <div>
                 <TextField
                   margin="normal"
@@ -257,8 +188,8 @@ export default function Form(props) {
                   autoComplete="noe"
                   autoFocus
                   sx={{ mt: 1 }}
-                  onChange={handleChange3}
-                  value={three}
+                  disabled
+                  value={arrstr[2]}
                 />
                 <TextField
                   margin="normal"
@@ -268,8 +199,8 @@ export default function Form(props) {
                   label="Maximum Depth"
                   type="maxDepth"
                   id="maxDepth"
-                  onChange={handleChange4}
-                  value={four}
+                  disabled
+                  value={arrstr[3]}
                 />
                 <TextField
                   margin="normal"
@@ -279,17 +210,17 @@ export default function Form(props) {
                   label="Maximum Samples Split"
                   type="mss"
                   id="mss"
-                  onChange={handleChange5}
-                  value={five}
+                  disabled
+                  value={arrstr[4]}
                 />
                 <FormControl sx={{ mt: 1 }} required fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Maximum Features For Splitting</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={six}
+                value={arrstr[5]}
                 label="Maximum Features For Splitting"
-                onChange={handleChange6}
+                disabled
               >
                 <MenuItem value={"auto"}>Auto</MenuItem>
                 <MenuItem value={"sqrt"}>Sqrt</MenuItem>
@@ -298,16 +229,16 @@ export default function Form(props) {
           </FormControl>
                 </div>
           }
-          {  two === "dst" &&  
+          {  arrstr[1] === "dst" &&  
               <div>
                 <FormControl sx={{ mt: 1 }} fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Splitting Criterion</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={three}
+                value={arrstr[2]}
                 label="Splitting Criterion"
-                onChange={handleChange3}
+                disabled
               >
                 <MenuItem value={"gini"}>Gini</MenuItem>
                 <MenuItem value={"entropy"}>Entropy</MenuItem>
@@ -321,8 +252,8 @@ export default function Form(props) {
                   label="Maximum Depth"
                   type="md"
                   id="md"
-                  onChange={handleChange4}
-                  value={four}
+                  disabled
+                  value={arrstr[3]}
                 />
                 <TextField
                   margin="normal"
@@ -332,17 +263,17 @@ export default function Form(props) {
                   label="Maximum Samples Split"
                   type="mss"
                   id="mss"
-                  onChange={handleChange5}
-                  value={five}
+                  disabled
+                  value={arrstr[4]}
                 />
                  <FormControl sx={{ mt: 1 }} required fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Maximum Features For Splitting</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={six}
+                value={arrstr[5]}
                 label="Maximum Features For Splitting"
-                onChange={handleChange6}
+                disabled
               >
                 <MenuItem value={"auto"}>Auto</MenuItem>
                 <MenuItem value={"sqrt"}>Sqrt</MenuItem>
@@ -351,16 +282,16 @@ export default function Form(props) {
           </FormControl>
                 </div>
           }
-          {  two === "nvb" &&  
+          {  arrstr[1] === "nvb" &&  
               <div>
                 <FormControl sx={{ mt: 3 }} fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Sub Classifier</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                value={three}
+                value={arrstr[2]}
                 label="Sub Classifier"
-                onChange={handleChange3}
+                disabled
               >
                 <MenuItem value={"bnb"}>Bernoulli NB</MenuItem>
                 <MenuItem value={"gnb"}>Gaussian NB</MenuItem>
@@ -369,7 +300,7 @@ export default function Form(props) {
           </FormControl>
                 </div>
           }
-          {  two === "adb" &&  
+          {  arrstr[1] === "adb" &&  
               <div>
                 <TextField
                   margin="normal"
@@ -381,8 +312,8 @@ export default function Form(props) {
                   autoComplete="noe"
                   autoFocus
                   sx={{ mt: 1 }}
-                  onChange={handleChange3}
-                  value={three}
+                  disabled
+                  value={arrstr[2]}
                 />
                 <TextField
                   margin="normal"
@@ -392,21 +323,21 @@ export default function Form(props) {
                   label="Learning Rate Value"
                   type="lrv"
                   id="lrv"
-                  onChange={handleChange4}
-                  value={four}
+                  disabled
+                  value={arrstr[3]}
                 />
                 </div>
           }
-          {  two === "ann" &&  
+          {  arrstr[1] === "ann" &&  
               <div>
                 <FormControl sx={{ mt: 3 }} fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Activation</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="solver"
-                value={three}
+                value={arrstr[2]}
                 label="Activation"
-                onChange={handleChange3}
+                disabled
               >
                 <MenuItem value={"logistic"}>Logistic</MenuItem>
                 <MenuItem value={"tanh"}>Tanh</MenuItem>
@@ -419,9 +350,9 @@ export default function Form(props) {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="solver"
-                value={four}
+                value={arrstr[3]}
                 label="Solver"
-                onChange={handleChange4}
+                disabled
               >
                 <MenuItem value={"lbfgs"}>lbfgs</MenuItem>
                 <MenuItem value={"adam"}>adam</MenuItem>
@@ -437,8 +368,8 @@ export default function Form(props) {
                   name="bs"
                   autoFocus
                   sx={{ mt: 1 }}
-                  onChange={handleChange5}
-                  value={five}
+                  disabled
+                  value={arrstr[4]}
                 />
                 <TextField
                   margin="normal"
@@ -449,8 +380,8 @@ export default function Form(props) {
                   name="noi"
                   autoFocus
                   sx={{ mt: 1 }}
-                  onChange={handleChange6}
-                  value={six}
+                  disabled
+                  value={arrstr[5]}
                 />
                 <TextField
                   margin="normal"
@@ -461,8 +392,8 @@ export default function Form(props) {
                   name="alpha"
                   autoFocus
                   sx={{ mt: 1 }}
-                  onChange={handleChange7}
-                  value={seven}
+                  disabled
+                  value={arrstr[6]}
                 />
                 </div>
           }
@@ -471,14 +402,6 @@ export default function Form(props) {
               disabled
               label="Remember me"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              SUBMIT
-            </Button>
           </Box>
         </Box>
       </Container>

@@ -1,6 +1,6 @@
 import {React,useState,useEffect} from 'react';
 import Split from 'react-split'
-import Form from './form'
+import BestForm from './bestForm'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
-export default function IdsPage() {
+export default function BestModel() {
   const [cookies, setCookie,removeCookie] = useCookies({});
   const [isLoading , setIsLoading] = useState(" ");
   const [test, setTest] = useState(0);
@@ -25,30 +25,9 @@ export default function IdsPage() {
   const [img2, setImg2] = useState("")
   const [img3, setImg3] = useState("")
   const [img4, setImg4] = useState("")
+  const [arrstr , setArrstr] = useState("");
   const navigate = useNavigate()
 
-
-  function handleLoading(temp1) {
-    setIsLoading(temp1);
-  }
-  function handleTest(temp2) {
-    setTest(temp2);
-  }
-  function handleTraining(temp3) {
-    setTraining(temp3);
-  }
-  function handleImg1(temp4) {
-    setImg1(temp4);
-  }
-  function handleImg2(temp5) {
-    setImg2(temp5);
-  }
-  function handleImg3(temp6) {
-    setImg3(temp6);
-  }
-  function handleImg4(temp7) {
-    setImg4(temp7);
-  }
 
   const handleLogout = () => {
     removeCookie("jwtoken", { path: "/" });
@@ -103,9 +82,36 @@ export default function IdsPage() {
       title:"Training Classification Report"
     },
   ];
+  const fetchData = async() => {
+  setIsLoading(true)
+  const res=await fetch(`/${cookies.userid}/getuser`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization" : cookies.jwtoken
+    },
+  });
+  const data = await res.json();
+  const data2 = data.searchHistory[0];
+  console.log(data2)
+  setImg1(data2.fileTestClfRep)
+  setImg2(data2.fileTestConfMat)
+  setImg3(data2.fileTrainClfRep)
+  setImg4(data2.fileTrainConfMat)
+  const str = data2.searchQuery;
+  const ans = str.split(" ")
+  setArrstr(ans);
+    setTest(parseFloat(data2.testAcc))
+    setTraining(parseFloat(data2.trainingAcc))
+    setIsLoading(false);
+}
+ 
   useEffect(() => {
     if(!cookies.jwtoken){
       navigate("/");
+    }
+    else{
+        fetchData();
     }
   }, []);
 return (
@@ -123,10 +129,10 @@ return (
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Intrusion Detection Testbed
+            Best Model
           </Typography>
           <Button color="inherit" component={Link}
-                to={"/bestModel"} onClick={handleModel}>Best Model</Button>
+                to={"/ids"} onClick={handleModel}>IDS Testbed</Button>
           <Button color="inherit" component={Link}
                 to={"/"} onClick={handleLogout}>Logout</Button>
         </Toolbar>
@@ -134,14 +140,15 @@ return (
     </Box>
 <Split
         className='flex'
-        sizes= {isLoading === " " ? [70, 30] : [60, 40]}
+        sizes= {[60, 40]}
         style={{height:"100%",width:"100%",display:"flex",margin:"auto"}}
         minSize={500}
       >
         <div style={{height:"100%",width:"100%",overflow:"auto"}}>
-          
-          <Form handleLoading={handleLoading} handleTest={handleTest} handleTraining={handleTraining} handleImg1={handleImg1} handleImg2={handleImg2} handleImg3={handleImg3} handleImg4={handleImg4}/>
-        </div>
+          { isLoading ? <CircularProgress disableShrink /> :
+          <BestForm isLoading={isLoading} arrstr={arrstr} />
+          }
+          </div>
         <Split
           direction='vertical'
           sizes={[70, 30]}
