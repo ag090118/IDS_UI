@@ -178,12 +178,13 @@ export default function BestModel() {
 }
  
   useEffect(() => {
-    if(!cookies.jwtoken){
-      navigate("/");
-    }
-    else{
-        fetchData();
-    }
+    // if(!cookies.jwtoken){
+    //   navigate("/");
+    // }
+    // else{
+    //     fetchData();
+    // }
+    fetchData();
   }, []);
 return (
 <div className="App">
