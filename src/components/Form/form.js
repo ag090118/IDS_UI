@@ -26,13 +26,13 @@ export default function Form(props) {
   const {handleLoading,handleTest,handleTraining,handleImg1,handleImg2,handleImg3,handleImg4} = props;
   const [cookies, setCookie] = useCookies({});
 
-  const [one , setOne] = React.useState([]);
-  const [two , setTwo] = React.useState([]);
-  const [three , setThree] = React.useState([]);
-  const [four , setFour] = React.useState([]);
-  const [five , setFive] = React.useState([]);
-  const [six , setSix] = React.useState([]);
-  const [seven , setSeven] = React.useState([]);
+  const [one , setOne] = React.useState("");
+  const [two , setTwo] = React.useState("");
+  const [three , setThree] = React.useState("");
+  const [four , setFour] = React.useState("");
+  const [five , setFive] = React.useState("");
+  const [six , setSix] = React.useState("");
+  const [seven , setSeven] = React.useState("");
   const [solver , setSolver] = React.useState("none");
 
   const handleChange1 = (event) => {
@@ -66,31 +66,36 @@ export default function Form(props) {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
-    handleLoading(true);
-    var str = one+" "+two+" "+three+" "+four+" "+five+" "+six+" "+seven;
-    str=str.trim();
-    console.log(cookies.jwtoken)
-    const res=await fetch('/xyz', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : cookies.jwtoken
-      },
-      body: JSON.stringify({
-        runstr : str
-      })
-    });
-    const data = await res.json();
-    console.log(data);
-    handleImg1(data.fileTestClfRep)
-    handleImg2(data.fileTestConfMat)
-    handleImg3(data.fileTrainClfRep)
-    handleImg4(data.fileTrainConfMat)
-    var str = data.testAcc;
-    str = str.substring(0, str.length - 2);
-    handleTest(parseFloat(data.testAcc))
-    handleTraining(parseFloat(data.trainingAcc))
-    handleLoading(false);
+    if(one==="" || two===""){
+      alert("Fill all required details");
+    }
+    else{
+        handleLoading(true);
+        var str = one+" "+two+" "+three+" "+four+" "+five+" "+six+" "+seven;
+        str=str.trim();
+        console.log(cookies.jwtoken)
+        const res=await fetch('/xyz', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization" : cookies.jwtoken
+          },
+          body: JSON.stringify({
+            runstr : str
+          })
+        });
+        const data = await res.json();
+        console.log(data);
+        handleImg1(data.fileTestClfRep)
+        handleImg2(data.fileTestConfMat)
+        handleImg3(data.fileTrainClfRep)
+        handleImg4(data.fileTrainConfMat)
+        var str = data.testAcc;
+        str = str.substring(0, str.length - 2);
+        handleTest(parseFloat(data.testAcc))
+        handleTraining(parseFloat(data.trainingAcc))
+        handleLoading(false);
+      }
   };
 
   return (
@@ -148,7 +153,7 @@ export default function Form(props) {
                 <MenuItem value={"adb"}>AdaBoost</MenuItem>
                 <MenuItem value={"ann"}>Artificial Neural Network</MenuItem>
               </Select>
-              <FormHelperText>With label + helper text</FormHelperText>
+              <FormHelperText>{' '}</FormHelperText>
           </FormControl>
           {  two === "lgr" &&  
               <div>
@@ -166,7 +171,6 @@ export default function Form(props) {
                 <MenuItem value={"sag"}>sag</MenuItem>
                 <MenuItem value={"saga"}>saga</MenuItem>
               </Select>
-              <FormHelperText>With label + helper text</FormHelperText>
           </FormControl>
           { solver === "none" ? null :
                    solver === "lbfgs" ? 
@@ -182,7 +186,7 @@ export default function Form(props) {
                     <MenuItem value={"l2"}>l2</MenuItem>
                     <MenuItem value={"none"}>none</MenuItem>
                   </Select>
-                  <FormHelperText>With label + helper text</FormHelperText>
+                  <FormHelperText>{' '}</FormHelperText>
               </FormControl>
               :
               solver === "liblinear" ? 
@@ -198,7 +202,7 @@ export default function Form(props) {
                     <MenuItem value={"l1"}>l1</MenuItem>
                     <MenuItem value={"l2"}>l2</MenuItem>
                   </Select>
-                  <FormHelperText>With label + helper text</FormHelperText>
+                  <FormHelperText>{' '}</FormHelperText>
               </FormControl> :
                solver === "sag" ? 
                <FormControl sx={{ mt: 3 }} required fullWidth>
@@ -213,7 +217,7 @@ export default function Form(props) {
                  <MenuItem value={"l2"}>l2</MenuItem>
                  <MenuItem value={"none"}>none</MenuItem>
                </Select>
-               <FormHelperText>With label + helper text</FormHelperText>
+               <FormHelperText>{' '}</FormHelperText>
            </FormControl>
               :
                     <FormControl sx={{ mt: 3 }} required fullWidth>
@@ -242,6 +246,14 @@ export default function Form(props) {
                   id="noi"
                   onChange={handleChange5}
                   value={five}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setFive(value);
+                  }}
                 />
                 </div>
           }
@@ -259,6 +271,14 @@ export default function Form(props) {
                   sx={{ mt: 1 }}
                   onChange={handleChange3}
                   value={three}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setThree(value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -270,6 +290,14 @@ export default function Form(props) {
                   id="maxDepth"
                   onChange={handleChange4}
                   value={four}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setFour(value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -281,6 +309,14 @@ export default function Form(props) {
                   id="mss"
                   onChange={handleChange5}
                   value={five}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setFive(value);
+                  }}
                 />
                 <FormControl sx={{ mt: 1 }} required fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Maximum Features For Splitting</InputLabel>
@@ -323,6 +359,14 @@ export default function Form(props) {
                   id="md"
                   onChange={handleChange4}
                   value={four}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setFour(value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -334,6 +378,14 @@ export default function Form(props) {
                   id="mss"
                   onChange={handleChange5}
                   value={five}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setFive(value);
+                  }}
                 />
                  <FormControl sx={{ mt: 1 }} required fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Maximum Features For Splitting</InputLabel>
@@ -365,7 +417,7 @@ export default function Form(props) {
                 <MenuItem value={"bnb"}>Bernoulli NB</MenuItem>
                 <MenuItem value={"gnb"}>Gaussian NB</MenuItem>
               </Select>
-              <FormHelperText>With label + helper text</FormHelperText>
+              {/* <FormHelperText>With label + helper text</FormHelperText> */}
           </FormControl>
                 </div>
           }
@@ -383,6 +435,14 @@ export default function Form(props) {
                   sx={{ mt: 1 }}
                   onChange={handleChange3}
                   value={three}
+                  helperText="Choose any positive integer"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setThree(value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -394,6 +454,14 @@ export default function Form(props) {
                   id="lrv"
                   onChange={handleChange4}
                   value={four}
+                  helperText="Choose any floating number"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0, steps:'any' } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setFour(value);
+                  }}
                 />
                 </div>
           }
@@ -412,7 +480,7 @@ export default function Form(props) {
                 <MenuItem value={"tanh"}>Tanh</MenuItem>
                 <MenuItem value={"relu"}>Relu</MenuItem>
               </Select>
-              <FormHelperText>With label + helper text</FormHelperText>
+              {/* <FormHelperText>With label + helper text</FormHelperText> */}
           </FormControl>
                 <FormControl sx={{ mt: 3 }} fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Solver</InputLabel>
@@ -426,7 +494,7 @@ export default function Form(props) {
                 <MenuItem value={"lbfgs"}>lbfgs</MenuItem>
                 <MenuItem value={"adam"}>adam</MenuItem>
               </Select>
-              <FormHelperText>With label + helper text</FormHelperText>
+              <FormHelperText>{' '}</FormHelperText>
           </FormControl>
                 <TextField
                   margin="normal"
@@ -439,6 +507,15 @@ export default function Form(props) {
                   sx={{ mt: 1 }}
                   onChange={handleChange5}
                   value={five}
+                  type="number"
+                  helperText="Input any integer from 0 to 20000"
+                  InputProps={{ inputProps: { min: 0, max:20000 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    if (value >20000) value = 0;
+                    setFive(value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -451,6 +528,14 @@ export default function Form(props) {
                   sx={{ mt: 1 }}
                   onChange={handleChange6}
                   value={six}
+                  type="number"
+                  helperText="Input any positive integer"
+                  InputProps={{ inputProps: { min: 0} }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setSix(value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -463,6 +548,14 @@ export default function Form(props) {
                   sx={{ mt: 1 }}
                   onChange={handleChange7}
                   value={seven}
+                  type="number"
+                  helperText="Input any flosting poiny number"
+                  InputProps={{ inputProps: { min: 0 } }}
+                  onChange={(e) => {
+                    var value = parseInt(e.target.value, 10);
+                    if (value < 0) value = 0;
+                    setSeven(value);
+                  }}
                 />
                 </div>
           }

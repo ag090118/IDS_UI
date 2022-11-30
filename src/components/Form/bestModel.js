@@ -15,6 +15,62 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
+import { GraphicEqSharp } from '@material-ui/icons';
+
+var graphData=[];
+// const data = [
+//   {
+//     searchQuery: "Page A",
+//     trainingAcc: 4000,
+//     testAcc: 2400,
+//     amt: 2400
+//   },
+//   {
+//     searchQuery: "Page B",
+//     trainingAcc: 3000,
+//     testAcc: 1398,
+//     amt: 2210
+//   },
+//   {
+//     searchQuery: "Page C",
+//     trainingAcc: 2000,
+//     testAcc: 9800,
+//     amt: 2290
+//   },
+//   {
+//     searchQuery: "nonojn",
+//     trainingAcc: 2780,
+//     testAcc: 3908,
+//     amt: 2000
+//   },
+//   {
+//     searchQuery: "Pag",
+//     trainingAcc: 1890,
+//     testAcc: 4800,
+//     amt: 2181
+//   },
+//   {
+//     searchQuery: "Page F",
+//     trainingAcc: 2390,
+//     testAcc: 3800,
+//     amt: 2500
+//   },
+//   {
+//     searchQuery: "Page G",
+//     trainingAcc: 3490,
+//     testAcc: 4300,
+//     amt: 2100
+//   }
+// ];
 
 export default function BestModel() {
   const [cookies, setCookie,removeCookie] = useCookies({});
@@ -32,7 +88,7 @@ export default function BestModel() {
   const handleLogout = () => {
     removeCookie("jwtoken", { path: "/" });
     removeCookie("userid", { path: "/" });
-    removeCookie("username", { path: "/" });
+    removeCookie("usersearchQuery", { path: "/" });
     removeCookie("token", { path: "/" });
   };
 
@@ -93,7 +149,22 @@ export default function BestModel() {
   });
   const data = await res.json();
   const data2 = data.searchHistory[0];
-  console.log(data2)
+  graphData=data.searchHistory;
+  graphData.forEach(function(elem, index) {
+    // if(elem.searchQuery.startsWith("mul lgr") || elem.searchQuery.startsWith("bnr lgr")) this[index].searchQuery="Logistic Regression";
+    // if(elem.searchQuery.startsWith("mul nvb") || elem.searchQuery.startsWith("bnr nvb")) this[index].searchQuery="Naive Bayes";
+    // if(elem.searchQuery.startsWith("mul dst") || elem.searchQuery.startsWith("bnr dst")) this[index].searchQuery="Decision Tree";
+    // if(elem.searchQuery.startsWith("mul rfc") || elem.searchQuery.startsWith("bnr rfc")) this[index].searchQuery="Random Forest";
+    // if(elem.searchQuery.startsWith("mul adb") || elem.searchQuery.startsWith("bnr adb")) this[index].searchQuery="AdaBoost ";
+    // if(elem.searchQuery.startsWith("mul ann") || elem.searchQuery.startsWith("bnr ann")) this[index].searchQuery="Artificial Neural Network";
+    if(elem.searchQuery.startsWith("mul lgr") || elem.searchQuery.startsWith("bnr lgr")) this[index].searchQuery="lgr";
+    if(elem.searchQuery.startsWith("mul nvb") || elem.searchQuery.startsWith("bnr nvb")) this[index].searchQuery="nbs";
+    if(elem.searchQuery.startsWith("mul dst") || elem.searchQuery.startsWith("bnr dst")) this[index].searchQuery="dst";
+    if(elem.searchQuery.startsWith("mul rfc") || elem.searchQuery.startsWith("bnr rfc")) this[index].searchQuery="rfc";
+    if(elem.searchQuery.startsWith("mul adb") || elem.searchQuery.startsWith("bnr adb")) this[index].searchQuery="adb";
+    if(elem.searchQuery.startsWith("mul ann") || elem.searchQuery.startsWith("bnr ann")) this[index].searchQuery="ann";
+  }, graphData);
+  console.log(graphData);
   setImg1(data2.fileTestClfRep)
   setImg2(data2.fileTestConfMat)
   setImg3(data2.fileTrainClfRep)
@@ -146,7 +217,25 @@ return (
       >
         <div style={{height:"100%",width:"100%",overflow:"auto"}}>
           { isLoading ? <CircularProgress disableShrink /> :
+          <div>
           <BestForm isLoading={isLoading} arrstr={arrstr} />
+          {/* <br/><br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> 
+              <br/><br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> */}
+              <LineChart width={800} height={500} data={graphData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="searchQuery" padding={{ left: 30, right: 30 }} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="testAcc"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+                <Line type="monotone" dataKey="trainingAcc" stroke="#82ca9d" />
+              </LineChart>
+          </div>
           }
           </div>
         <Split
@@ -158,24 +247,26 @@ return (
             { 
             isLoading === " " ? 
             null : 
-            isLoading === true ? <CircularProgress disableShrink /> : 
-          <ImageList>
-          {itemData.map((item) => (
-            <ImageListItem key={item.img}>
-              <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                alt={item.title}
-                loading="lazy"
-              />
-              <ImageListItemBar
-                title={item.title}
-                // subtitle={<span>by: {item.author}</span>}
-                position="below"
-              />
-            </ImageListItem>
-          ))}
-    </ImageList>
+            isLoading === true ? <CircularProgress disableShrink /> :
+            <div>
+              <ImageList>
+              {itemData.map((item) => (
+                <ImageListItem key={item.img}>
+                  <img
+                    src={`${item.img}?w=248&fit=crop&auto=format`}
+                    srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                  <ImageListItemBar
+                    title={item.title}
+                    // subtitle={<span>by: {item.author}</span>}
+                    position="below"
+                  />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </div>
 }
           </div>
 

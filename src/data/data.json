@@ -4,18 +4,13 @@
     "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam sed commodo nibh ante facilisis bibendum."
   },
   "About": {
-    "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "paragraph": "This web-based platform aims to contribute towards network security analysis domain. The software provides a graphical user interface(GUI) for Network Intrusion Detection using Machine Learning techniques. IDS monitors a network or system for malicious activity and protects a computer network from unauthorized access from users, including perhaps insider. The user can choose a type of classification(binary/multiclass), the type of classifier and can provide hyperparameter values as custom input. Over multiple executions the model having best testing accuracy is displayed",
     "Why": [
-      "Lorem ipsum dolor",
-      "Tempor incididunt",
-      "Lorem ipsum dolor",
-      "Incididunt ut labore"
+      "Provides choice among various hyperparameter",
+      "Provides seaborn plot for better visualization",
+      "Latest dataset having more robustness used for training"
     ],
     "Why2": [
-      "Aliquip ex ea commodo",
-      "Lorem ipsum dolor",
-      "Exercitation ullamco",
-      "Lorem ipsum dolor"
     ]
   },
   "Gallery": [

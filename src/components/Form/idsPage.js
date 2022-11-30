@@ -15,6 +15,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Flow from "./Flow.js";
+
 
 export default function IdsPage() {
   const [cookies, setCookie,removeCookie] = useCookies({});
@@ -151,7 +153,7 @@ return (
             { 
             isLoading === " " ? 
             null : 
-            isLoading === true ? <CircularProgress disableShrink /> : 
+            isLoading === true ? <Flow/> : 
           <ImageList>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
